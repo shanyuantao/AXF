@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block EXTJS %}
+    <script type="text/javascript" src="{% static 'app/order/js/order.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div id="order_info" class="container">
+
+    <!--订单编号-->
+    <h3>订单编号:{{ order_id }}</h3>
+    <!--处理结束-->
+    <ul>
+
+        <!--所有订单信息展示-->
+{#        orders是根据order_id取出的第一单， ordersgoods.model关联了order，反向取出ordergoodsmodel中的所有内容#}
+{#        取出ordergoodsmodel中的每一行#}
+{#    该表格中有外键关联了商品和购物车#}
+        {% for ordergood in orders.ordergoodsmodel_set.all %}
+            <li>
+                <!--商品名称展示-->
+{#                通过外键取出被关联表格Goods中的产品图片#}
+{#                上面取出了第一行， 第一行的goods.id所对应的被关联表格中的信息#}
+                <img src="{{ ordergood.goods.productimg }}">
+
+                <span> <!-- 数量展示 -->{{ ordergood.goods_num }}</span>
+            </li>
+
+        <!--订单处理结束-->
+        {% endfor %}
+    </ul>
+        <!--订单id展示-->
+{#         支付按钮，为什么要传入订单的编号呢， 点击支付了，在支付访问的方法中把订单的状态给改了#}
+        <button id="alipay"><a href="{% url 'axf:order_pay' order_id %}">Alipay</a></button>
+
+    </div>
+
+
+{% endblock %}
